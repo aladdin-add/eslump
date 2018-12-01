@@ -137,8 +137,8 @@ function run(input) {
     return { stdout: generateRandomJS(options), code: 0 };
   }
 
-  const testModule = options._[0];
-  const outputDir = options._[1];
+  const testModule = getModuleName(options._[0]);
+  const outputDir = getModuleName(options._[1]);
 
   let testFunction;
   try {
@@ -377,6 +377,16 @@ function getLocation(error) {
 
 function indent(string) {
   return string.replace(/^/gm, "  ");
+}
+
+// if ends with '.js', it is not a module.
+// e.g: "acorn" => true; "test.js" => false
+function isModule(str) {
+  return str.slice(-3) === ".js";
+}
+
+function getModuleName(str) {
+  return isModule(str) ? str : path.join(process.cwd(), str);
 }
 
 module.exports = run;
